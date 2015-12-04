@@ -1,8 +1,14 @@
+var {Cc, Ci} = require("chrome");
 var buttons = require('sdk/ui/button/action');
 var tabs = require("sdk/tabs");
 var self = require("sdk/self");
 var pageWorker = require("sdk/page-worker");
-var worker = null;
+var worker = tabs.activeTab.attach({
+              contentScript:  "self.port.on('initialization', function(){" +
+                              " console.log('initialization')" +
+                              "});"
+            });
+
 
 var button = buttons.ActionButton({
   id: "style-tab",
@@ -19,84 +25,52 @@ var button = buttons.ActionButton({
 
 tabs.on('ready', runScript);
 tabs.on('activate', function(){
-  worker.port.emit("updateInfo");
+  if(worker){
+    worker.port.emit("updateInfo");
+  }
 });
 
 function runScript(tab){
-  worker = tab.attach({
+  worker = tabs.activeTab.attach({
             contentScriptFile: [
+              self.data.url("common.js"),
               self.data.url("debounce.js"),
+              self.data.url("check-duplicate.js"),
               self.data.url("update-info.js"),
               self.data.url("scroll-handler.js"),
-              self.data.url("resize-handler.js")
+              self.data.url("resize-handler.js"),
+              self.data.url("click-listener.js"),
+              self.data.url("element-to-string.js"),
+              self.data.url("get-time.js")
               ]
-  })
+  });
+
   worker.port.emit("updateInfo");
-}
-
-/*var { ToggleButton } = require("sdk/ui/button/toggle");
-var self = require("sdk/self");
-var data = self.data;
-//var pageMod = require("sdk/page-mod");
-
-//pageMod.PageMod({
-//  include: "*.com",
-//  contentScriptFile: data.url("page-load.js")
-//});
-
-var text_entry = require("sdk/panel").Panel({
-  contentURL: data.url("text-entry.html"),
-  contentScriptFile: data.url("get-text.js")
-});
-
-var button = ToggleButton({
-  id: "my-button",
-  label: "My button",
-  icon: {
-    "16": "./icon-16.png",
-    "32": "./icon-32.png",
-    "64": "./icon-64.png"
-  },
-  onClick: function(){
-    console.log("ok.");
-    var worker = tabs.activeTab.attach({
-      contentScriptFile: self.data.url("page-load.js")
-    });
-    worker.port.emit("drawBorder", "red");
-  },
-  badge: 0,
-  badgeColor: "#00AAAA"
-});
-
-tabs.on("ready",runScript);
-
-function runScript(tab){
-  tab.attach({
-    contentScriptFile: data.url("page-load.js")
+  worker.port.on("dataRecorded", printData); 
+  worker.port.on("userAction", function(msg){
+    foStream.write(msg, msg.length);
   });
 }
 
-function handleChange(state){
-  button.badge = state.badge + 1;
-  button.checked = state.checked;
-  if(state.checked){
-    button.badgeColor = "#AA00AA";
-  } else {
-    button.badgeColor = "#00AAAA";
+function printData(screenData){
+  var file_path = "E:\\Record data\\record_data.txt";
+  var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+  file.initWithPath(file_path);
+
+  if (file.exists() == false)
+  {
+    file.create(Ci.nsIFile.NORMAL_FILE_TYPE, 420);
   }
-  //text_entry.show();
+
+  var foStream = Cc["@mozilla.org/network/file-output-stream;1"].createInstance(Ci.nsIFileOutputStream);
+  // 0x02 | 0x10  to open file for appending
+  // 0x02 | 0x08 | 0x20 to rewrite file
+  //foStream.init(file, 0x02 | 0x10, 0666, 0);
+  foStream.init(file, 0x02 | 0x08 | 0x20, 0666, 0);
+  
+  for (var i=0; i<screenData.length; i++){
+    foStream.write(screenData[i], screenData[i].length);
+  }
+
+  foStream.close();
 }
-
-function handleClick(state) {
-  tabs.open("http://www.google.com/");
-}
-
-text_entry.on("show", function(){
-  text_entry.port.emit("show");
-});
-
-text_entry.port.on('text-entered', function(text){
-  console.log(text);
-  text_entry.hide();
-});
-*/
