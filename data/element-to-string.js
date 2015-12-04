@@ -8,6 +8,8 @@ function elementToString(timestamp, browser, element, type, clickable){
   var viewpointY = rect.top;
   var browserX = (viewpointX <= 0) ? 0 : viewpointX;
   var browserY = (viewpointY <= 0) ? 0 : viewpointY;
+  var documentX = viewpointX + browser.scrollX;
+  var documentY = viewpointY + browser.scrollY;
   
   if (viewpointX <= 0) {
     width = width + viewpointX;
@@ -41,8 +43,8 @@ function elementToString(timestamp, browser, element, type, clickable){
 
   reStr +=  "\t" + Math.round(width) + 
             "\t" + Math.round(height) +
-            "\t" + Math.round(viewpointX) + 
-            "\t" + Math.round(viewpointY) +
+            "\t" + Math.round(documentX) + 
+            "\t" + Math.round(documentY) +
             "\t" + Math.round(browserX) +
             "\t" + Math.round(browserY) +
             "\t" + Math.round(screenX) +
