@@ -10,7 +10,11 @@ function elementToString(timestamp, browser, element, type, clickable){
   var browserY = (viewpointY <= 0) ? 0 : viewpointY;
   var documentX = viewpointX + browser.scrollX;
   var documentY = viewpointY + browser.scrollY;
-  
+  var isVisible = true;
+  var elementID = type + 
+                  Math.floor(documentX) + Math.floor(documentY) + 
+                  Math.floor(width) + Math.floor(height);
+
   if (viewpointX <= 0) {
     width = width + viewpointX;
     browserX = 0;
@@ -29,6 +33,8 @@ function elementToString(timestamp, browser, element, type, clickable){
     reStr = "N\\A";
   }
 
+  reStr += "\t" + elementID;
+
   if (typeof(type) !== 'undefined') {
     reStr += "\t" + type;
   } else {
@@ -41,14 +47,18 @@ function elementToString(timestamp, browser, element, type, clickable){
     reStr += "\t0";
   }
 
-  reStr +=  "\t" + Math.round(width) + 
-            "\t" + Math.round(height) +
-            "\t" + Math.round(documentX) + 
-            "\t" + Math.round(documentY) +
-            "\t" + Math.round(browserX) +
-            "\t" + Math.round(browserY) +
-            "\t" + Math.round(screenX) +
-            "\t" + Math.round(screenY);
+
+  //TODO add check visible
+  reStr += "\t" + isVisible;
+
+  reStr +=  "\t" + Math.floor(width) + 
+            "\t" + Math.floor(height) +
+            "\t" + Math.floor(documentX) + 
+            "\t" + Math.floor(documentY) +
+            "\t" + Math.floor(browserX) +
+            "\t" + Math.floor(browserY) +
+            "\t" + Math.floor(screenX) +
+            "\t" + Math.floor(screenY);
   reStr += "\n";
 
   return reStr ;

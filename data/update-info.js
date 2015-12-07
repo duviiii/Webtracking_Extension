@@ -48,11 +48,6 @@ function onUpdateInfo(){
   console.log("Window location on screen: " + size.outerX + "x" + size.outerY);
   console.log("Browser border: left: " + size.borderLeft + " & top: " + size.borderTop);
   console.log("Window is being maximized: " + size.isMaximized);
-  console.log("Number of buttons displayed: " + displayed_buttons.length);
-  console.log("Number of links displayed: " + displayed_links.length);
-  console.log("Number of images displayed: " + displayed_images.length);
-  console.log("Number of text: " + texts.length);
-  console.log("Number of text displayed: " + displayed_texts.length);
 
   //var tmp = buttons[0].getBoundingClientRect();
   //console.log("test: " + isDuplicatedElements(buttons[0],buttons[0]));
