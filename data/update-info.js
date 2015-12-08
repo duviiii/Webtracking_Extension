@@ -3,8 +3,11 @@ self.port.on("updateInfo", onUpdateInfo);
 function onUpdateInfo(){
   var data = null;
   data = document.getElementsByTagName('*');
-
   var size = getWindowSize();
+  //Update oldX and oldY for browser moving check
+  oldX = size.outerX;
+  oldY = size.outerY;
+  
   var raw_buttons = getButtons(data);
   var raw_links = getLinks(data);
   var raw_images = getImages(data);
