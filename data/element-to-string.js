@@ -1,4 +1,4 @@
-function elementToString(timestamp, browser, element, type, clickable){
+function elementToString(timestamp, browser, element, type, clickable, isVisible){
   var reStr = "";
   var rect = element.getBoundingClientRect();
 
@@ -10,7 +10,7 @@ function elementToString(timestamp, browser, element, type, clickable){
   var browserY = (viewpointY <= 0) ? 0 : viewpointY;
   var documentX = viewpointX + browser.scrollX;
   var documentY = viewpointY + browser.scrollY;
-  var isVisible = true;
+
   var elementID = type + 
                   Math.floor(documentX) + Math.floor(documentY) + 
                   Math.floor(width) + Math.floor(height);
@@ -47,8 +47,6 @@ function elementToString(timestamp, browser, element, type, clickable){
     reStr += "\t0";
   }
 
-
-  //TODO add check visible
   reStr += "\t" + isVisible;
 
   reStr +=  "\t" + Math.floor(width) + 

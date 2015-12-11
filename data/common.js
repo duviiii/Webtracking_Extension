@@ -91,3 +91,32 @@ function isClickableImage(image) {
   }
   return reVal;
 }
+
+function isVisibleLink(link){
+  var reVal = true;
+  if(isEmpty(link.textContent) || hasInvisibleParent(link)){
+    reVal = false;
+  }
+  return reVal;
+}
+
+function isEmpty(str) {
+  return (!str || 0 === str.length);
+}
+
+function hasInvisibleParent(element){
+  var reVal = false;
+  while(element.parentNode){
+    element = element.parentNode;
+    if (!element.hasAttribute) {
+      break;
+    }
+    if (
+        (element.hasAttribute("style") && element.style.display == "none") ||
+        (element.hasAttribute("style") && element.style.visibility == "hidden")){
+      reVal = true;
+      break;
+    }
+  }
+  return reVal;
+}

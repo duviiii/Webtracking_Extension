@@ -59,16 +59,16 @@ function onUpdateInfo(){
   var time = getTime();
   var screenData = [];
   for (var i=0; i<displayed_buttons.length; i++){
-    screenData.push(elementToString(time, size, displayed_buttons[i], "button", true));
+    screenData.push(elementToString(time, size, displayed_buttons[i], "button", true, true));
   }
   for (var j=0; j<displayed_links.length; j++){
-    screenData.push(elementToString(time, size, displayed_links[j], "link", true));
+    screenData.push(elementToString(time, size, displayed_links[j], "link", true, isVisibleLink(displayed_links[j])));
   }
   for (var k=0; k<displayed_images.length; k++){
-    screenData.push(elementToString(time, size, displayed_images[k], "image", isClickableImage(displayed_images[k])));
+    screenData.push(elementToString(time, size, displayed_images[k], "image", isClickableImage(displayed_images[k]), true));
   }
   for (var l=0; l<displayed_texts.length; l++){
-    screenData.push(elementToString(time, size, displayed_texts[l], "text", false));
+    screenData.push(elementToString(time, size, displayed_texts[l], "text", false, true));
   }
 
   self.port.emit("dataRecorded", screenData);
