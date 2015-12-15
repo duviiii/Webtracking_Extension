@@ -5,8 +5,8 @@ function onUpdateInfo(isClickEvent = false, clickInfo = null){
   data = document.getElementsByTagName('*');
   var size = getWindowSize();
   //Update oldX and oldY for browser moving check
-  oldX = size.outerX;
-  oldY = size.outerY;
+  oldX = window.screenX;
+  oldY = window.screenY;
   
   var raw_buttons = getButtons(data);
   var raw_links = getLinks(data);
