@@ -1,4 +1,4 @@
-var delayedScroll = debounce(scrollHandler, 250);
+var delayedScroll = debounce(scrollHandler, 500);
 window.onscroll = delayedScroll;
 
 function scrollHandler(){

@@ -1,6 +1,6 @@
 self.port.on("updateInfo", onUpdateInfo);
 
-function onUpdateInfo(){
+function onUpdateInfo(isClickEvent = false, clickInfo = null){
   var data = null;
   data = document.getElementsByTagName('*');
   var size = getWindowSize();
@@ -58,6 +58,10 @@ function onUpdateInfo(){
   //Send data back to local extention
   var time = getTime();
   var screenData = [];
+  if(isClickEvent){
+    var tmpMsg = time + "\t" + clickInfo.side + "\tclick\t\t\t\t\t\t\t\t\t" + clickInfo.x + "\t" + clickInfo.y + "\n";
+    screenData.push(tmpMsg);
+  }
   for (var i=0; i<displayed_buttons.length; i++){
     screenData.push(elementToString(time, size, displayed_buttons[i], "button", true, true));
   }

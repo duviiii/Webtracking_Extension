@@ -1,4 +1,4 @@
-var delayedResize = debounce(resizeHandler, 250);
+var delayedResize = debounce(resizeHandler, 500);
 window.onresize = delayedResize;
 
 function resizeHandler(){
