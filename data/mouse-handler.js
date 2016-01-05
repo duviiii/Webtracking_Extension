@@ -34,7 +34,6 @@ var interval = setInterval(mouse_handler,200);
 function mouse_handler(){
   if (mouseInside){
     //location corresponding to the browser inner window
-    console.log(cursorX + "x" + cursorY);
     var time = getTime();
     var size = getWindowSize();
     var screenX = cursorX + size.borderLeft + size.outerX;

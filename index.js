@@ -57,25 +57,40 @@ function runScript(tab){
 
 function printWebpageData(screenData){
   var file_path = "E:\\Record data\\record_data.txt";
+  var file_path2 = "E:\\Record data\\record_data_extended.txt";
+
   var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+  var file2 = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
+
   file.initWithPath(file_path);
+  file2.initWithPath(file_path2);
 
   if (file.exists() == false)
   {
     file.create(Ci.nsIFile.NORMAL_FILE_TYPE, 420);
   }
 
+  if (file2.exists() == false)
+  {
+    file2.create(Ci.nsIFile.NORMAL_FILE_TYPE, 420);
+  }
+
   var foStream = Cc["@mozilla.org/network/file-output-stream;1"].createInstance(Ci.nsIFileOutputStream);
+  var foStream2 = Cc["@mozilla.org/network/file-output-stream;1"].createInstance(Ci.nsIFileOutputStream);
+
   // 0x02 | 0x10  to open file for appending
   // 0x02 | 0x08 | 0x20 to rewrite file
   //foStream.init(file, 0x02 | 0x10, 0666, 0);
   foStream.init(file, 0x02 | 0x08 | 0x20, 0666, 0);
+  foStream2.init(file2, 0x02 | 0x10, 0666, 0);
   
   for (var i=0; i<screenData.length; i++){
     foStream.write(screenData[i], screenData[i].length);
+    foStream2.write(screenData[i], screenData[i].length);
   }
 
   foStream.close();
+  foStream2.close();
 }
 
 function printMouseData(msg){
