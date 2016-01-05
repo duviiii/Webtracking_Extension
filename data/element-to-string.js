@@ -23,6 +23,12 @@ function elementToString(timestamp, browser, element, type, clickable, isVisible
     height = height + viewpointY;
     browserY = 0;
   }
+  if ((width + viewpointX) >= (browser.scrollX + browser.innerWidth)){
+    width = width + viewpointX - browser.scrollX - browser.innerWidth;
+  }
+  if ((height + viewpointY) >= (browser.scrollY + browser.innerHeight)){
+    height = height + viewpointY - browser.scrollY - browser.innerHeight;
+  }
 
   var screenX = browserX + browser.borderLeft + browser.outerX;
   var screenY = browserY + browser.borderTop + browser.outerY;
