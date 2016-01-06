@@ -8,7 +8,7 @@ var worker = tabs.activeTab.attach({
                               " console.log('initialization')" +
                               "});"
             });
-
+var inXML = true;
 
 var button = buttons.ActionButton({
   id: "style-tab",
@@ -42,6 +42,7 @@ function runScript(tab){
               self.data.url("move-handler.js"),
               self.data.url("click-listener.js"),
               self.data.url("element-to-string.js"),
+              self.data.url("element-to-xml.js"),
               self.data.url("get-time.js"),
               self.data.url("mouse-handler.js")
               ]
@@ -56,8 +57,13 @@ function runScript(tab){
 }
 
 function printWebpageData(screenData){
-  var file_path = "E:\\Record data\\record_data.txt";
-  var file_path2 = "E:\\Record data\\record_data_extended.txt";
+  if(inXML){
+    var file_path = "E:\\Record data\\record_data.xml";
+    var file_path2 = "E:\\Record data\\record_data_extended.xml";
+  } else {
+    var file_path = "E:\\Record data\\record_data.txt";
+    var file_path2 = "E:\\Record data\\record_data_extended.txt";
+  }
 
   var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
   var file2 = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);

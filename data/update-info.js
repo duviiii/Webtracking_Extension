@@ -2,6 +2,7 @@ self.port.on("updateInfo", onUpdateInfo);
 
 function onUpdateInfo(isClickEvent = false, clickInfo = null){
   var data = null;
+  var inXML = true;
   data = document.getElementsByTagName('*');
   var size = getWindowSize();
   //Update oldX and oldY for browser moving check
@@ -58,21 +59,49 @@ function onUpdateInfo(isClickEvent = false, clickInfo = null){
   //Send data back to local extention
   var time = getTime();
   var screenData = [];
-  if(isClickEvent){
-    var tmpMsg = time + "\t" + clickInfo.side + "\tclick\t\t\t\t\t\t\t\t\t" + clickInfo.x + "\t" + clickInfo.y + "\n";
-    screenData.push(tmpMsg);
-  }
-  for (var i=0; i<displayed_buttons.length; i++){
-    screenData.push(elementToString(time, size, displayed_buttons[i], "button", true, true));
-  }
-  for (var j=0; j<displayed_links.length; j++){
-    screenData.push(elementToString(time, size, displayed_links[j], "link", true, isVisibleLink(displayed_links[j])));
-  }
-  for (var k=0; k<displayed_images.length; k++){
-    screenData.push(elementToString(time, size, displayed_images[k], "image", isClickableImage(displayed_images[k]), true));
-  }
-  for (var l=0; l<displayed_texts.length; l++){
-    screenData.push(elementToString(time, size, displayed_texts[l], "text", false, true));
+
+  if(inXML){
+    screenData.push("<recordData>\n");
+
+    if(isClickEvent){
+      var tmpMsg = "<event\t" + "time=\""+time + "\"" + "\t" +
+        "side=\"" + clickInfo.side + "\"" + "\t" + 
+        "type=\"click\"" + "\t" + 
+        "x=\"" + clickInfo.x + "\"" + "\t" + 
+        "y=\"" + clickInfo.y + "\"" + "></event>\n";
+      screenData.push(tmpMsg);
+    }
+    for (var i=0; i<displayed_buttons.length; i++){
+      screenData.push(elementToXML(time, size, displayed_buttons[i], "button", true, true));
+    }
+    for (var j=0; j<displayed_links.length; j++){
+      screenData.push(elementToXML(time, size, displayed_links[j], "link", true, isVisibleLink(displayed_links[j])));
+    }
+    for (var k=0; k<displayed_images.length; k++){
+      screenData.push(elementToXML(time, size, displayed_images[k], "image", isClickableImage(displayed_images[k]), true));
+    }
+    for (var l=0; l<displayed_texts.length; l++){
+      screenData.push(elementToXML(time, size, displayed_texts[l], "text", false, true));
+    }
+
+    screenData.push("</recordData>\n");
+  } else {
+    if(isClickEvent){
+      var tmpMsg = time + "\t" + clickInfo.side + "\tclick\t\t\t\t\t\t\t\t\t" + clickInfo.x + "\t" + clickInfo.y + "\n";
+      screenData.push(tmpMsg);
+    }
+    for (var i=0; i<displayed_buttons.length; i++){
+      screenData.push(elementToString(time, size, displayed_buttons[i], "button", true, true));
+    }
+    for (var j=0; j<displayed_links.length; j++){
+      screenData.push(elementToString(time, size, displayed_links[j], "link", true, isVisibleLink(displayed_links[j])));
+    }
+    for (var k=0; k<displayed_images.length; k++){
+      screenData.push(elementToString(time, size, displayed_images[k], "image", isClickableImage(displayed_images[k]), true));
+    }
+    for (var l=0; l<displayed_texts.length; l++){
+      screenData.push(elementToString(time, size, displayed_texts[l], "text", false, true));
+    }
   }
 
   self.port.emit("dataRecorded", screenData);
