@@ -1,8 +1,20 @@
+var isTrackingData = true;
+var isTrackingMouse = true;
+var inXML = true;
+
 self.port.on("updateInfo", onUpdateInfo);
 
+self.port.on("dataRecord",function(){
+  isTrackingData = !isTrackingData;
+});
+
+self.port.on("mouseRecord",function(){
+  isTrackingMouse = !isTrackingMouse;
+});
+
 function onUpdateInfo(isClickEvent = false, clickInfo = null){
+  if(!isTrackingData) return;
   var data = null;
-  var inXML = true;
   data = document.getElementsByTagName('*');
   var size = getWindowSize();
   //Update oldX and oldY for browser moving check

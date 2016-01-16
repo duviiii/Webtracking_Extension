@@ -8,8 +8,61 @@ var worker = tabs.activeTab.attach({
                               " console.log('initialization')" +
                               "});"
             });
-var inXML = true;
+var { ToggleButton } = require("sdk/ui/button/toggle");
+var panels = require("sdk/panel");
 
+var inXML = true;
+var isTrackingData = true;
+var isTrackingMouse = true;
+
+
+var button = ToggleButton({
+  id: "option-button",
+  label: "option",
+  icon:{
+    "16": "./icon-16.png",
+    "32": "./icon-32.png",
+    "64": "./icon-64.png"
+  },
+  onChange: handleToggle
+});
+
+
+var panel = panels.Panel({
+  contentURL: self.data.url("panel.html"),
+  contentScriptFile: self.data.url("panel.js"),
+  onHide: handleHide
+});
+
+panel.port.on("dataRecord",function(){
+  isTrackingData = !isTrackingData;
+  worker.port.emit("dataRecord");
+});
+
+panel.port.on("mouseRecord",function(){
+  isTrackingMouse = !isTrackingMouse;
+  worker.port.emit("mouseRecord");
+});
+
+panel.port.on("infoClick",function(){
+  button.state('window', {checked: false});
+});
+
+function handleToggle(state){
+  if(state.checked){
+    panel.show({
+      position: button
+    });
+  }
+}
+
+function handleHide(){
+  button.state('window', {checked: false});
+}
+
+
+
+/*
 var button = buttons.ActionButton({
   id: "style-tab",
   label: "Style Tab",
@@ -22,6 +75,7 @@ var button = buttons.ActionButton({
     worker.port.emit("updateInfo");
   }
 });
+*/
 
 tabs.on('ready', runScript);
 tabs.on('activate', function(){
@@ -57,6 +111,7 @@ function runScript(tab){
 }
 
 function printWebpageData(screenData){
+  if(!isTrackingData) return;
   if(inXML){
     var file_path = "E:\\Record data\\record_data.xml";
     var file_path2 = "E:\\Record data\\record_data_extended.xml";
@@ -100,6 +155,7 @@ function printWebpageData(screenData){
 }
 
 function printMouseData(msg){
+  if(!isTrackingMouse) return;
   var file_path = "E:\\Record data\\mouse_data.txt";
   var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
   file.initWithPath(file_path);

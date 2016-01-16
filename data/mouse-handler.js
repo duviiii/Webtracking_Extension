@@ -32,7 +32,7 @@ window.onmousemove = function(e){
 var interval = setInterval(mouse_handler,200);
 
 function mouse_handler(){
-  if (mouseInside){
+  if (mouseInside && isTrackingMouse){
     //location corresponding to the browser inner window
     var time = getTime();
     var size = getWindowSize();
