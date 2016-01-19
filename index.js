@@ -78,11 +78,15 @@ var button = buttons.ActionButton({
 */
 
 tabs.on('ready', runScript);
-tabs.on('activate', function(){
-  if(worker){
-    worker.port.emit("updateInfo");
-  }
+tabs.on('select', function(){
+  tabs.activeTab.attach({
+              contentScript:  "window.scrollBy(1,0);"
+            });
 });
+
+tabs.on("*",function(e){
+  console.log("event " + e + " was emitted");
+})
 
 function runScript(tab){
   worker = tabs.activeTab.attach({
