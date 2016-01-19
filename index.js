@@ -14,6 +14,7 @@ var panels = require("sdk/panel");
 var inXML = true;
 var isTrackingData = true;
 var isTrackingMouse = true;
+var dataDir = "C:\\Eye Tracking\\Record data";
 
 
 var button = ToggleButton({
@@ -42,6 +43,11 @@ panel.port.on("dataRecord",function(){
 panel.port.on("mouseRecord",function(){
   isTrackingMouse = !isTrackingMouse;
   worker.port.emit("mouseRecord");
+});
+
+panel.port.on("changeFormat", function(){
+  inXML = !inXML;
+  worker.port.emit("changeFormat");
 });
 
 panel.port.on("infoClick",function(){
@@ -82,11 +88,9 @@ tabs.on('select', function(){
   tabs.activeTab.attach({
               contentScript:  "window.scrollBy(1,0);"
             });
+  worker.port.emit("updateSetting", isTrackingData+""+isTrackingMouse);
+  worker.port.emit("updateFormatSetting", inXML+"");
 });
-
-tabs.on("*",function(e){
-  console.log("event " + e + " was emitted");
-})
 
 function runScript(tab){
   worker = tabs.activeTab.attach({
@@ -105,7 +109,8 @@ function runScript(tab){
               self.data.url("mouse-handler.js")
               ]
   });
-
+  worker.port.emit("updateSetting", isTrackingData+""+isTrackingMouse);
+  worker.port.emit("updateFormatSetting", inXML+"");
   worker.port.emit("updateInfo");
   worker.port.on("dataRecorded", printWebpageData);
   worker.port.on("mouseTracking", printMouseData);
@@ -117,11 +122,11 @@ function runScript(tab){
 function printWebpageData(screenData){
   if(!isTrackingData) return;
   if(inXML){
-    var file_path = "E:\\Record data\\record_data.xml";
-    var file_path2 = "E:\\Record data\\record_data_extended.xml";
+    var file_path = dataDir + "\\record_data.xml";
+    var file_path2 = dataDir + "\\record_data_extended.xml";
   } else {
-    var file_path = "E:\\Record data\\record_data.txt";
-    var file_path2 = "E:\\Record data\\record_data_extended.txt";
+    var file_path = dataDir + "\\record_data.txt";
+    var file_path2 = dataDir + "\\record_data_extended.txt";
   }
 
   var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);

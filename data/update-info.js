@@ -12,7 +12,37 @@ self.port.on("mouseRecord",function(){
   isTrackingMouse = !isTrackingMouse;
 });
 
+self.port.on("changeFormat",function(){
+  inXML = !inXML;
+});
+
+self.port.on("updateSetting",function(msg){
+  if(msg == "truetrue"){
+    isTrackingData = true;
+    isTrackingMouse = true;
+  } else if(msg == "truefalse") {
+    isTrackingData = true;
+    isTrackingMouse = false;
+  } else if(msg == "falsetrue") {
+    isTrackingData = false;
+    isTrackingMouse = true;
+  } else if(msg == "falsefalse"){
+    isTrackingData = false;
+    isTrackingMouse = false;
+  }
+});
+
+self.port.on("updateFormatSetting",function(msg){
+  if(msg=="true"){
+    inXML = true;
+  } else {
+    inXML = false;
+  }
+});
+
 function onUpdateInfo(isClickEvent = false, clickInfo = null){
+  self.port.emit("getSetting");
+
   if(!isTrackingData) return;
   var data = null;
   data = document.getElementsByTagName('*');
@@ -64,6 +94,7 @@ function onUpdateInfo(isClickEvent = false, clickInfo = null){
   console.log("Window location on screen: " + size.outerX + "x" + size.outerY);
   console.log("Browser border: left: " + size.borderLeft + " & top: " + size.borderTop);
   console.log("Window is being maximized: " + size.isMaximized);
+  
 
   //var tmp = buttons[0].getBoundingClientRect();
   //console.log("test: " + isDuplicatedElements(buttons[0],buttons[0]));
@@ -126,10 +157,10 @@ function getDisplayedElements(elements, displayArea){
     if(rect.width == 0 || rect.height == 0) {
       continue;
     }
-    if( rect.top > displayArea.scrollY + displayArea.innerHeight 
-        || rect.left > displayArea.scrollX + displayArea.innerWidth
-        || rect.bottom < displayArea.scrollX
-        || rect.right < displayArea.scrollY){
+    if( rect.top > displayArea.innerHeight 
+        || rect.left > displayArea.innerWidth
+        || rect.bottom < 0 - rect.height
+        || rect.right < 0 - rect.width){
       continue;
     }
     reVal.push(elements[i]);

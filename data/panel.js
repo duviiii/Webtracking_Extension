@@ -1,5 +1,7 @@
+document.getElementById("overall").addEventListener("click", overallClick);
 document.getElementById("data").addEventListener("click", dataClick);
 document.getElementById("mouse").addEventListener("click", mouseClick);
+//document.getElementById("format").addEventListener("click", formatClick);
 document.getElementById("info").addEventListener("click", infoClick);
 
 function dataClick(){
@@ -22,6 +24,40 @@ function mouseClick(){
     e.innerHTML = "Mouse Recording: on";
   }
   self.port.emit("mouseRecord");
+}
+/*
+function formatClick(){
+  var e = document.getElementById("format");
+  var tmp = e.innerHTML;
+  if(tmp == "File format: xml"){
+    e.innerHTML = "File format: txt";
+  } else {
+    e.innerHTML = "File format: xml";
+  }
+  self.port.emit("changeFormat");
+}
+*/
+
+function overallClick(){
+  var e = document.getElementById("overall");
+  var tmp = e.innerHTML;
+  if(tmp == "Turn off"){
+    e.innerHTML = "Turn on";
+    if(document.getElementById("data").innerHTML == "Data Recording: on"){
+      dataClick();
+    }
+    if(document.getElementById("mouse").innerHTML == "Mouse Recording: on"){
+      mouseClick();
+    }
+  } else {
+    e.innerHTML = "Turn off";
+    if(document.getElementById("data").innerHTML == "Data Recording: off"){
+      dataClick();
+    }
+    if(document.getElementById("mouse").innerHTML == "Mouse Recording: off"){
+      mouseClick();
+    }
+  }
 }
 
 function infoClick(){
