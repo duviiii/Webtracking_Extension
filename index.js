@@ -165,7 +165,7 @@ function printWebpageData(screenData){
 
 function printMouseData(msg){
   if(!isTrackingMouse) return;
-  var file_path = "E:\\Record data\\mouse_data.txt";
+  var file_path = dataDir + "\\mouse_data.txt";
   var file = Cc["@mozilla.org/file/local;1"].createInstance(Ci.nsILocalFile);
   file.initWithPath(file_path);
 
