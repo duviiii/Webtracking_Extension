@@ -104,7 +104,7 @@ function onUpdateInfo(isClickEvent = false, clickInfo = null){
   var screenData = [];
 
   if(inXML){
-    screenData.push("<recordData id=\"" + time + "\">\n");
+    screenData.push("<recordData\tid=\"" + time + "\">\n");
 
     if(isClickEvent){
       var tmpMsg = "<event\t" + "time=\""+time + "\"" + "\t" +
