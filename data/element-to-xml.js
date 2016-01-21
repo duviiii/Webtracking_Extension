@@ -34,7 +34,6 @@ function elementToXML(timestamp, browser, element, type, clickable, isVisible){
   var screenY = browserY + browser.borderTop + browser.outerY;
 
   reStr += "\tid=\"" + elementID + "\"";
-  reStr += "\ttime=\"" + timestamp + "\"";
   reStr += "\ttype=\"" + type + "\"";
   reStr += "\tclickable=\"" + clickable + "\"";
   reStr += "\tvisible=\"" + isVisible + "\"";
