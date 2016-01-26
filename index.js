@@ -20,11 +20,7 @@ var dataDir = "C:\\Eye Tracking\\Record data";
 var button = ToggleButton({
   id: "option-button",
   label: "option",
-  icon:{
-    "16": "./icon-16.png",
-    "32": "./icon-32.png",
-    "64": "./icon-64.png"
-  },
+  icon:"./eye-tracking.ico",
   onChange: handleToggle
 });
 
