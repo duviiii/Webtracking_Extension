@@ -14,8 +14,21 @@ var panels = require("sdk/panel");
 var inXML = true;
 var isTrackingData = true;
 var isTrackingMouse = true;
-var dataDir = "C:\\Eye Tracking\\Record data";
-
+// Returns 
+// "WINNT" on Windows 
+// "Linux" on GNU/Linux 
+// "Darwin" on Mac OS X.  
+const osString = Cc['@mozilla.org/xre/app-info;1'].getService(Ci.nsIXULRuntime).OS;
+console.log(osString);
+var dataDir = "";
+// TODO: Not tested on Linux and MacOS
+if (osString == "Darwin"){
+  dataDir = "~\\Eye Tracking\\Record data";
+} else if (osString == "Linux") {
+  dataDir = "~\\Eye Tracking\\Record data";
+} else {
+  dataDir = "C:\\Eye Tracking\\Record data";
+}
 
 var button = ToggleButton({
   id: "option-button",
@@ -24,13 +37,13 @@ var button = ToggleButton({
   onChange: handleToggle
 });
 
-
 var panel = panels.Panel({
   contentURL: self.data.url("panel.html"),
   contentScriptFile: self.data.url("panel.js"),
   onHide: handleHide
 });
 
+panel.port.emit("updateDirectory", dataDir);
 panel.port.on("dataRecord",function(){
   isTrackingData = !isTrackingData;
   worker.port.emit("dataRecord");
@@ -49,6 +62,7 @@ panel.port.on("changeFormat", function(){
 panel.port.on("infoClick",function(){
   button.state('window', {checked: false});
 });
+
 
 function handleToggle(state){
   if(state.checked){

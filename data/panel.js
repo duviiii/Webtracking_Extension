@@ -4,6 +4,10 @@ document.getElementById("mouse").addEventListener("click", mouseClick);
 //document.getElementById("format").addEventListener("click", formatClick);
 document.getElementById("info").addEventListener("click", infoClick);
 
+self.port.on("updateDirectory", function(dir){
+  document.getElementById("dataDir").innerHTML = dir;
+});
+
 function dataClick(){
   var e = document.getElementById("data");
   var tmp = e.innerHTML;
