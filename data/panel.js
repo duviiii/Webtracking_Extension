@@ -65,6 +65,6 @@ function overallClick(){
 }
 
 function infoClick(){
-  window.open("http://ducnq301.wix.com/web-tracking");
   self.port.emit("infoClick");
+  window.open("http://ducnq301.wix.com/web-tracking");
 }

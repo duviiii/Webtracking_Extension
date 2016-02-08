@@ -17,7 +17,6 @@ addEvent(document, "mouseout", function(e) {
     if (!from || from.nodeName == "HTML") {
         // stop your drag event here
         // for now we can just use an alert
-        console.log("mouse out");
         mouseInside = false;
     } else {
       mouseInside = true;

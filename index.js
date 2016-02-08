@@ -3,6 +3,7 @@ var buttons = require('sdk/ui/button/action');
 var tabs = require("sdk/tabs");
 var self = require("sdk/self");
 var pageWorker = require("sdk/page-worker");
+//Initializing worker
 var worker = tabs.activeTab.attach({
               contentScript:  "self.port.on('initialization', function(){" +
                               " console.log('initialization')" +
@@ -19,7 +20,6 @@ var isTrackingMouse = true;
 // "Linux" on GNU/Linux 
 // "Darwin" on Mac OS X.  
 const osString = Cc['@mozilla.org/xre/app-info;1'].getService(Ci.nsIXULRuntime).OS;
-console.log(osString);
 var dataDir = "";
 // TODO: Not tested on Linux and MacOS
 if (osString == "Darwin"){
@@ -30,6 +30,7 @@ if (osString == "Darwin"){
   dataDir = "C:\\Eye Tracking\\Record data";
 }
 
+// Initialize option button
 var button = ToggleButton({
   id: "option-button",
   label: "option",
@@ -37,23 +38,29 @@ var button = ToggleButton({
   onChange: handleToggle
 });
 
+// Initialize option menu panel
 var panel = panels.Panel({
   contentURL: self.data.url("panel.html"),
   contentScriptFile: self.data.url("panel.js"),
   onHide: handleHide
 });
 
+// NOTE: currently not available
 panel.port.emit("updateDirectory", dataDir);
+
+// change data recording setting
 panel.port.on("dataRecord",function(){
   isTrackingData = !isTrackingData;
   worker.port.emit("dataRecord");
 });
 
+// change mouse recording setting
 panel.port.on("mouseRecord",function(){
   isTrackingMouse = !isTrackingMouse;
   worker.port.emit("mouseRecord");
 });
 
+// NOTE: currently not available
 panel.port.on("changeFormat", function(){
   inXML = !inXML;
   worker.port.emit("changeFormat");
@@ -75,8 +82,6 @@ function handleToggle(state){
 function handleHide(){
   button.state('window', {checked: false});
 }
-
-
 
 /*
 var button = buttons.ActionButton({
@@ -111,7 +116,7 @@ function runScript(tab){
               self.data.url("update-info.js"),
               self.data.url("scroll-handler.js"),
               self.data.url("resize-handler.js"),
-              self.data.url("move-handler.js"),
+              seb lf.data.url("move-handler.js"),
               self.data.url("click-listener.js"),
               self.data.url("element-to-string.js"),
               self.data.url("element-to-xml.js"),
