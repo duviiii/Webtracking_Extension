@@ -116,7 +116,7 @@ function runScript(tab){
               self.data.url("update-info.js"),
               self.data.url("scroll-handler.js"),
               self.data.url("resize-handler.js"),
-              seb lf.data.url("move-handler.js"),
+              self.data.url("move-handler.js"),
               self.data.url("click-listener.js"),
               self.data.url("element-to-string.js"),
               self.data.url("element-to-xml.js"),
