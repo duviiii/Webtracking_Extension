@@ -1,7 +1,3 @@
-var cursorX = 0;
-var cursorY = 0;
-var mouseInside = false;
-
 function addEvent(obj, evt, fn) {
     if (obj.addEventListener) {
         obj.addEventListener(evt, fn, false);
@@ -34,9 +30,11 @@ function mouse_handler(){
   if (mouseInside && isTrackingMouse){
     //location corresponding to the browser inner window
     var time = getTime();
-    var size = getWindowSize();
-    var screenX = cursorX + size.borderLeft + size.outerX;
-    var screenY = cursorY + size.borderTop + size.outerY;
+    if (typeof(windowSize)=="undefined"){
+        windowSize = getWindowSize();
+    }
+    var screenX = cursorX + windowSize.borderLeft + windowSize.outerX;
+    var screenY = cursorY + windowSize.borderTop + windowSize.outerY;
 
     var msg = time + "\t" + screenX + "\t" + screenY + "\n";
     self.port.emit("mouseTracking",msg);

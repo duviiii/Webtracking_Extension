@@ -1,6 +1,10 @@
 var isTrackingData = true;
 var isTrackingMouse = true;
 var inXML = true;
+var cursorX = 0;
+var cursorY = 0;
+var mouseInside = false;
+var windowSize;
 
 self.port.on("updateInfo", onUpdateInfo);
 
@@ -40,13 +44,15 @@ self.port.on("updateFormatSetting",function(msg){
   }
 });
 
-function onUpdateInfo(isClickEvent = false, clickInfo = null){
+function onUpdateInfo(isClickEvent = false, clickInfo = null, clickTime = null){
   self.port.emit("getSetting");
 
   if(!isTrackingData) return;
   var data = null;
+  var time = null;
+
   data = document.getElementsByTagName('*');
-  var size = getWindowSize();
+  windowSize = getWindowSize();
   //Update oldX and oldY for browser moving check
   oldX = window.screenX;
   oldY = window.screenY;
@@ -63,44 +69,48 @@ function onUpdateInfo(isClickEvent = false, clickInfo = null){
 
   if (raw_buttons.length > 0){
     var buttons = removeDuplicate(raw_buttons);
-    displayed_buttons = getDisplayedElements(raw_buttons, size);
+    displayed_buttons = getDisplayedElements(raw_buttons, windowSize);
   } else { var buttons = raw_buttons;}
 
   if (raw_links.length > 0) {
     var links = removeDuplicate(raw_links);
-    displayed_links = getDisplayedElements(raw_links, size);
+    displayed_links = getDisplayedElements(raw_links, windowSize);
   } else { var links = raw_links;}
 
   if (raw_images.length > 0) {
     var images = removeDuplicate(raw_images);
-    displayed_images = getDisplayedElements(raw_images, size);
+    displayed_images = getDisplayedElements(raw_images, windowSize);
   } else { var images = raw_images;}
 
   if (raw_texts.length > 0){
     var texts = removeDuplicate(raw_texts);
-    displayed_texts = getDisplayedElements(raw_texts, size);
+    displayed_texts = getDisplayedElements(raw_texts, windowSize);
   } else { var texts = raw_texts;}
   //var buttons = getButtons(data);
   //var links = getLinks(data);
 
   console.log("------------------------------------------------------");
   console.log("Current Url domain: " + window.location.origin);
-  console.log("Browser scrolling location: " + size.scrollX + "x" + size.scrollY);
-  console.log("Inner browser window size: " + size.innerWidth + "x" + size.innerHeight);
+  console.log("Browser scrolling location: " + windowSize.scrollX + "x" + windowSize.scrollY);
+  console.log("Inner browser window size: " + windowSize.innerWidth + "x" + windowSize.innerHeight);
   console.log("Window resolution: " + screen.width + "x" + screen.height);
   console.log("Window available area resolution: " + screen.availWidth + "x" + screen.availHeight);
   console.log("Try out: " + document.body.clientWidth + "x" + document.body.clientHeight);
-  console.log("Window inner coordination: " + size.innerX + "x" + size.innerY);
-  console.log("Window location on screen: " + size.outerX + "x" + size.outerY);
-  console.log("Browser border: left: " + size.borderLeft + " & top: " + size.borderTop);
-  console.log("Window is being maximized: " + size.isMaximized);
+  console.log("Window inner coordination: " + windowSize.innerX + "x" + windowSize.innerY);
+  console.log("Window location on screen: " + windowSize.outerX + "x" + windowSize.outerY);
+  console.log("Browser border: left: " + windowSize.borderLeft + " & top: " + windowSize.borderTop);
+  console.log("Window is being maximized: " + windowSize.isMaximized);
   
 
   //var tmp = buttons[0].getBoundingClientRect();
   //console.log("test: " + isDuplicatedElements(buttons[0],buttons[0]));
 
   //Send data back to local extention
-  var time = getTime();
+  if (isClickEvent){
+    time = clickTime;
+  } else {
+    time = getTime();
+  }
   var screenData = [];
 
   if(inXML){
@@ -115,16 +125,16 @@ function onUpdateInfo(isClickEvent = false, clickInfo = null){
       screenData.push(tmpMsg);
     }
     for (var i=0; i<displayed_buttons.length; i++){
-      screenData.push(elementToXML(time, size, displayed_buttons[i], "button", true, true));
+      screenData.push(elementToXML(time, windowSize, displayed_buttons[i], "button", true, true));
     }
     for (var j=0; j<displayed_links.length; j++){
-      screenData.push(elementToXML(time, size, displayed_links[j], "link", true, isVisibleLink(displayed_links[j])));
+      screenData.push(elementToXML(time, windowSize, displayed_links[j], "link", true, isVisibleLink(displayed_links[j])));
     }
     for (var k=0; k<displayed_images.length; k++){
-      screenData.push(elementToXML(time, size, displayed_images[k], "image", isClickableImage(displayed_images[k]), true));
+      screenData.push(elementToXML(time, windowSize, displayed_images[k], "image", isClickableImage(displayed_images[k]), true));
     }
     for (var l=0; l<displayed_texts.length; l++){
-      screenData.push(elementToXML(time, size, displayed_texts[l], "text", false, true));
+      screenData.push(elementToXML(time, windowSize, displayed_texts[l], "text", false, true));
     }
 
     screenData.push("</recordData>\n");
@@ -134,16 +144,16 @@ function onUpdateInfo(isClickEvent = false, clickInfo = null){
       screenData.push(tmpMsg);
     }
     for (var i=0; i<displayed_buttons.length; i++){
-      screenData.push(elementToString(time, size, displayed_buttons[i], "button", true, true));
+      screenData.push(elementToString(time, windowSize, displayed_buttons[i], "button", true, true));
     }
     for (var j=0; j<displayed_links.length; j++){
-      screenData.push(elementToString(time, size, displayed_links[j], "link", true, isVisibleLink(displayed_links[j])));
+      screenData.push(elementToString(time, windowSize, displayed_links[j], "link", true, isVisibleLink(displayed_links[j])));
     }
     for (var k=0; k<displayed_images.length; k++){
-      screenData.push(elementToString(time, size, displayed_images[k], "image", isClickableImage(displayed_images[k]), true));
+      screenData.push(elementToString(time, windowSize, displayed_images[k], "image", isClickableImage(displayed_images[k]), true));
     }
     for (var l=0; l<displayed_texts.length; l++){
-      screenData.push(elementToString(time, size, displayed_texts[l], "text", false, true));
+      screenData.push(elementToString(time, windowSize, displayed_texts[l], "text", false, true));
     }
   }
 

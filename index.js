@@ -101,7 +101,7 @@ var button = buttons.ActionButton({
 tabs.on('ready', runScript);
 tabs.on('select', function(){
   tabs.activeTab.attach({
-              contentScript:  "window.scrollBy(1,0);"
+              contentScript:  "window.scrollBy(0,1);"
             });
   worker.port.emit("updateSetting", isTrackingData+""+isTrackingMouse);
   worker.port.emit("updateFormatSetting", inXML+"");
