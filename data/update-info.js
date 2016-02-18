@@ -4,9 +4,17 @@ var inXML = true;
 var cursorX = 0;
 var cursorY = 0;
 var mouseInside = false;
-var windowSize;
+var windowSize = getWindowSize();
+var raw_buttons = null;
+var raw_links = null;
+var raw_images = null;
+var raw_texts = null;
 
-self.port.on("updateInfo", onUpdateInfo);
+self.port.on("reloadContent", onReloadContent);
+self.port.on("updateInfo",function() {
+  var time = getTime();
+  onUpdateInfo(time);
+});
 
 self.port.on("dataRecord",function(){
   isTrackingData = !isTrackingData;
@@ -44,45 +52,48 @@ self.port.on("updateFormatSetting",function(msg){
   }
 });
 
-function onUpdateInfo(isClickEvent = false, clickInfo = null, clickTime = null){
+function onReloadContent(){
+  console.log("reload content eh?")
+  // Load all webpage element
+  var data = document.getElementsByTagName('*');
+  raw_buttons = getButtons(data);
+  raw_links = getLinks(data);
+  raw_images = getImages(data);
+  raw_texts = getTexts(data);
+}
+
+function onUpdateInfo(time, isClickEvent = false, clickInfo = null){
+  // Update setting
   self.port.emit("getSetting");
 
+  // Check is tracking data
   if(!isTrackingData) return;
-  var data = null;
-  var time = null;
 
-  data = document.getElementsByTagName('*');
-  windowSize = getWindowSize();
   //Update oldX and oldY for browser moving check
   oldX = window.screenX;
   oldY = window.screenY;
-  
-  var raw_buttons = getButtons(data);
-  var raw_links = getLinks(data);
-  var raw_images = getImages(data);
-  var raw_texts = getTexts(data);
 
   var displayed_buttons = [];
   var displayed_links = [];
   var displayed_images = [];
   var displayed_texts = [];
 
-  if (raw_buttons.length > 0){
+  if (raw_buttons != null && raw_buttons.length > 0){
     var buttons = removeDuplicate(raw_buttons);
     displayed_buttons = getDisplayedElements(raw_buttons, windowSize);
   } else { var buttons = raw_buttons;}
 
-  if (raw_links.length > 0) {
+  if (raw_links != null && raw_links.length > 0) {
     var links = removeDuplicate(raw_links);
     displayed_links = getDisplayedElements(raw_links, windowSize);
   } else { var links = raw_links;}
 
-  if (raw_images.length > 0) {
+  if (raw_images != null && raw_images.length > 0) {
     var images = removeDuplicate(raw_images);
     displayed_images = getDisplayedElements(raw_images, windowSize);
   } else { var images = raw_images;}
 
-  if (raw_texts.length > 0){
+  if (raw_images != null && raw_texts.length > 0){
     var texts = removeDuplicate(raw_texts);
     displayed_texts = getDisplayedElements(raw_texts, windowSize);
   } else { var texts = raw_texts;}
@@ -93,10 +104,6 @@ function onUpdateInfo(isClickEvent = false, clickInfo = null, clickTime = null){
   console.log("Current Url domain: " + window.location.origin);
   console.log("Browser scrolling location: " + windowSize.scrollX + "x" + windowSize.scrollY);
   console.log("Inner browser window size: " + windowSize.innerWidth + "x" + windowSize.innerHeight);
-  console.log("Window resolution: " + screen.width + "x" + screen.height);
-  console.log("Window available area resolution: " + screen.availWidth + "x" + screen.availHeight);
-  console.log("Try out: " + document.body.clientWidth + "x" + document.body.clientHeight);
-  console.log("Window inner coordination: " + windowSize.innerX + "x" + windowSize.innerY);
   console.log("Window location on screen: " + windowSize.outerX + "x" + windowSize.outerY);
   console.log("Browser border: left: " + windowSize.borderLeft + " & top: " + windowSize.borderTop);
   console.log("Window is being maximized: " + windowSize.isMaximized);
@@ -105,12 +112,6 @@ function onUpdateInfo(isClickEvent = false, clickInfo = null, clickTime = null){
   //var tmp = buttons[0].getBoundingClientRect();
   //console.log("test: " + isDuplicatedElements(buttons[0],buttons[0]));
 
-  //Send data back to local extention
-  if (isClickEvent){
-    time = clickTime;
-  } else {
-    time = getTime();
-  }
   var screenData = [];
 
   if(inXML){

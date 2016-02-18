@@ -100,6 +100,7 @@ var button = buttons.ActionButton({
 
 tabs.on('ready', runScript);
 tabs.on('select', function(){
+  worker.port.emit("reloadContent");
   tabs.activeTab.attach({
               contentScript:  "window.scrollBy(0,1);"
             });
@@ -126,6 +127,7 @@ function runScript(tab){
   });
   worker.port.emit("updateSetting", isTrackingData+""+isTrackingMouse);
   worker.port.emit("updateFormatSetting", inXML+"");
+  worker.port.emit("reloadContent");
   worker.port.emit("updateInfo");
   worker.port.on("dataRecorded", printWebpageData);
   worker.port.on("mouseTracking", printMouseData);

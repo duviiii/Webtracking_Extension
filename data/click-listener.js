@@ -1,11 +1,12 @@
 document.addEventListener('click', function(e){
+  var time = getTime();
   //location corresponding to the browser inner window
   var element = e.target;
   var screenX = cursorX + windowSize.borderLeft + windowSize.outerX;
   var screenY = cursorY + windowSize.borderTop + windowSize.outerY;
-  var time = getTime();
   
-  if(isButton(element)|| containLink(element)){
+  //NOTE: Turn off filter for now
+  //if(isButton(element)|| containLink(element)){
     var rect = element.getBoundingClientRect();
     var msg1 = "\nClick location: X: " + screenX + "-- Y: " + screenY + "\n";
     console.log(msg1);
@@ -26,7 +27,7 @@ document.addEventListener('click', function(e){
     }
 
     var clickInfo = {x: screenX, y: screenY, side: clickSide};
-
-    onUpdateInfo(true, clickInfo, time);
-  }
+    onReloadContent();
+    onUpdateInfo(time, true, clickInfo);
+  //}
 });
