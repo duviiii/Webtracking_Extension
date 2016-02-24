@@ -39,7 +39,8 @@ function hasDivChild(element) {
   var reVal = false;
   if (element.hasChildNodes()){
     var childNodes = element.childNodes;
-    for (var i=0; i<childNodes.length; i++) {
+    var l = childNodes.length;
+    for (var i=0; i<l; i++) {
       if(childNodes[i].nodeType == 1 &&
         childNodes[i].tagName.toLowerCase() == "div") {
         reVal = true;

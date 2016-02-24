@@ -171,7 +171,9 @@ function printWebpageData(screenData){
   foStream.init(file, 0x02 | 0x08 | 0x20, 0666, 0);
   foStream2.init(file2, 0x02 | 0x10, 0666, 0);
   
-  for (var i=0; i<screenData.length; i++){
+  var l = screenData.length;
+
+  for (var i=0; i<l; i++){
     foStream.write(screenData[i], screenData[i].length);
     foStream2.write(screenData[i], screenData[i].length);
   }

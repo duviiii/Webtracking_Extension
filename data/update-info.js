@@ -118,42 +118,50 @@ function onUpdateInfo(time, isClickEvent = false, clickInfo = null){
     screenData.push("<recordData\tid=\"" + time + "\">\n");
 
     if(isClickEvent){
-      var tmpMsg = "<event\t" + "time=\""+time + "\"" + "\t" +
+      screenData.push("<event\t" + "time=\""+time + "\"" + "\t" +
         "side=\"" + clickInfo.side + "\"" + "\t" + 
         "type=\"click\"" + "\t" + 
         "x=\"" + clickInfo.x + "\"" + "\t" + 
-        "y=\"" + clickInfo.y + "\"" + "></event>\n";
-      screenData.push(tmpMsg);
+        "y=\"" + clickInfo.y + "\"" + "></event>\n");
     }
-    for (var i=0; i<displayed_buttons.length; i++){
+    var dl = displayed_buttons.length;
+    for (var i=0; i<dl; i++){
       screenData.push(elementToXML(time, windowSize, displayed_buttons[i], "button", true, true));
     }
-    for (var j=0; j<displayed_links.length; j++){
+    dl = displayed_links.length;
+    for (var j=0; j<dl; j++){
       screenData.push(elementToXML(time, windowSize, displayed_links[j], "link", true, isVisibleLink(displayed_links[j])));
     }
-    for (var k=0; k<displayed_images.length; k++){
+    dl = displayed_images.length;
+    for (var k=0; k<dl; k++){
       screenData.push(elementToXML(time, windowSize, displayed_images[k], "image", isClickableImage(displayed_images[k]), true));
     }
-    for (var l=0; l<displayed_texts.length; l++){
+    dl = displayed_texts.length;
+    for (var l=0; l<dl; l++){
       screenData.push(elementToXML(time, windowSize, displayed_texts[l], "text", false, true));
     }
 
     screenData.push("</recordData>\n");
   } else {
     if(isClickEvent){
-      var tmpMsg = time + "\t" + clickInfo.side + "\tclick\t\t\t\t\t\t\t\t\t" + clickInfo.x + "\t" + clickInfo.y + "\n";
-      screenData.push(tmpMsg);
+      screenData.push(time + "\t" + clickInfo.side + 
+        "\tclick\t\t\t\t\t\t\t\t\t" + clickInfo.x + 
+        "\t" + clickInfo.y + "\n");
     }
-    for (var i=0; i<displayed_buttons.length; i++){
+    var dl = displayed_buttons.length;
+    for (var i=0; i<dl; i++){
       screenData.push(elementToString(time, windowSize, displayed_buttons[i], "button", true, true));
     }
-    for (var j=0; j<displayed_links.length; j++){
+    dl = displayed_links.length;
+    for (var j=0; j<dl; j++){
       screenData.push(elementToString(time, windowSize, displayed_links[j], "link", true, isVisibleLink(displayed_links[j])));
     }
-    for (var k=0; k<displayed_images.length; k++){
+    dl = displayed_images.length;
+    for (var k=0; k<dl; k++){
       screenData.push(elementToString(time, windowSize, displayed_images[k], "image", isClickableImage(displayed_images[k]), true));
     }
-    for (var l=0; l<displayed_texts.length; l++){
+    dl = displayed_texts.length;
+    for (var l=0; l<dl; l++){
       screenData.push(elementToString(time, windowSize, displayed_texts[l], "text", false, true));
     }
   }
@@ -163,7 +171,8 @@ function onUpdateInfo(time, isClickEvent = false, clickInfo = null){
 
 function getDisplayedElements(elements, displayArea){
   var reVal = [];
-  for (var i=0; i<elements.length; i++){
+  var l = elements.length;
+  for (var i=0; i<l; i++){
     var rect = elements[i].getBoundingClientRect();
     if(rect.width == 0 || rect.height == 0) {
       continue;
@@ -229,7 +238,8 @@ function getWindowSize(){
 
 function getButtons(data){
   var reVal = [];
-  for (var i=0; i<data.length; i++){
+  var l = data.length;
+  for (var i=0; i<l; i++){
     if(isButton(data[i])){
       reVal.push(data[i]);
     }
@@ -239,7 +249,8 @@ function getButtons(data){
 
 function getLinks(data){
   var reVal = [];
-  for (var i=0; i<data.length; i++){
+  var l = data.length;
+  for (var i=0; i<l; i++){
     if(containLink(data[i])){
       reVal.push(data[i]);
     }
@@ -253,7 +264,8 @@ function getImages(data){
 
 function getTexts(data){
   var reVal = [];
-  for (var i=0; i<data.length; i++){
+  var l = data.length;
+  for (var i=0; i<l; i++){
     if(isText(data[i])) {
       reVal.push(data[i]);
     }

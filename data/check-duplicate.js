@@ -1,9 +1,12 @@
 function removeDuplicate(elements){
   var reVal = [];
-  for(var i=0; i<elements.length; i++){
+  var l = elements.length;
+  for(var i=0; i<l; i++){
     var duplicated = 0;
-    
-    for(var j=0; j<reVal.length; j++){
+
+    var m = reVal.length;
+    var j = 0;    
+    for(j=0; j<m; j++){
       duplicated = isDuplicatedElements(elements[i], reVal[j]);
       if(duplicated == 1) { 
         break; 
