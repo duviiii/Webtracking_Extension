@@ -109,7 +109,7 @@ tabs.on('select', function(){
 });
 
 function runScript(tab){
-  worker = tabs.activeTab.attach({
+  worker = tab.attach({
             contentScriptFile: [
               self.data.url("common.js"),
               self.data.url("debounce.js"),
@@ -125,10 +125,12 @@ function runScript(tab){
               self.data.url("mouse-handler.js")
               ]
   });
+  tabs.activeTab.attach({
+              contentScript:  "window.scrollBy(0,1);"
+            });
   worker.port.emit("updateSetting", isTrackingData+""+isTrackingMouse);
   worker.port.emit("updateFormatSetting", inXML+"");
   worker.port.emit("reloadContent");
-  worker.port.emit("updateInfo");
   worker.port.on("dataRecorded", printWebpageData);
   worker.port.on("mouseTracking", printMouseData);
   worker.port.on("userAction", function(msg){
