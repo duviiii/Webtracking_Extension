@@ -1,4 +1,4 @@
-document.addEventListener('click', function(e){
+var delayedClick = debounce(function(e){
   var time = getTime();
   //location corresponding to the browser inner window
   var element = e.target;
@@ -30,4 +30,6 @@ document.addEventListener('click', function(e){
     onReloadContent();
     onUpdateInfo(time, true, clickInfo);
   //}
-});
+}, 500);
+
+document.addEventListener('click', delayedClick);

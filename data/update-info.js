@@ -100,14 +100,16 @@ function onUpdateInfo(time, isClickEvent = false, clickInfo = null){
   //var buttons = getButtons(data);
   //var links = getLinks(data);
 
-  console.log("------------------------------------------------------");
+  // Information logging
+  /*
   console.log("Current Url domain: " + window.location.origin);
   console.log("Browser scrolling location: " + windowSize.scrollX + "x" + windowSize.scrollY);
+  console.log("------------------------------------------------------");
   console.log("Inner browser window size: " + windowSize.innerWidth + "x" + windowSize.innerHeight);
   console.log("Window location on screen: " + windowSize.outerX + "x" + windowSize.outerY);
   console.log("Browser border: left: " + windowSize.borderLeft + " & top: " + windowSize.borderTop);
   console.log("Window is being maximized: " + windowSize.isMaximized);
-  
+  */
 
   //var tmp = buttons[0].getBoundingClientRect();
   //console.log("test: " + isDuplicatedElements(buttons[0],buttons[0]));

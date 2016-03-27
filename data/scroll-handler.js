@@ -1,5 +1,6 @@
 var delayedScroll = debounce(scrollHandler, 500);
-window.onscroll = delayedScroll;
+// Use document.onscroll to fix an error with Facebook
+document.onscroll = delayedScroll;
 
 function scrollHandler(){
   var time = getTime();

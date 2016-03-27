@@ -102,10 +102,16 @@ tabs.on('ready', runScript);
 tabs.on('select', function(){
   worker.port.emit("reloadContent");
   tabs.activeTab.attach({
-              contentScript:  "window.scrollBy(0,1);"
-            });
+    contentScript:  "window.scrollBy(0,1);window.scrollBy(0,-1);"
+  });
   worker.port.emit("updateSetting", isTrackingData+""+isTrackingMouse);
   worker.port.emit("updateFormatSetting", inXML+"");
+});
+
+tabs.on('deactivate', function(){
+  worker = tabs.activeTab.attach({
+    contentScript:  "window.scrollBy(0,1);window.scrollBy(0,-1);"
+  });
 });
 
 function runScript(tab){
@@ -125,17 +131,16 @@ function runScript(tab){
               self.data.url("mouse-handler.js")
               ]
   });
+  
   tabs.activeTab.attach({
-              contentScript:  "window.scrollBy(0,1);"
+              contentScript:  "window.scrollBy(0,1);window.scrollBy(0,-1);"
             });
+  
   worker.port.emit("updateSetting", isTrackingData+""+isTrackingMouse);
   worker.port.emit("updateFormatSetting", inXML+"");
   worker.port.emit("reloadContent");
   worker.port.on("dataRecorded", printWebpageData);
   worker.port.on("mouseTracking", printMouseData);
-  worker.port.on("userAction", function(msg){
-    foStream.write(msg, msg.length);
-  });
 }
 
 function printWebpageData(screenData){
