@@ -1,6 +1,6 @@
 var isTrackingData = true;
 var isTrackingMouse = true;
-var inXML = false;
+var inXML = true;
 var cursorX = 0;
 var cursorY = 0;
 var mouseInside = false;

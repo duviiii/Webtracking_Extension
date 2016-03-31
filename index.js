@@ -12,7 +12,7 @@ var worker = tabs.activeTab.attach({
 var { ToggleButton } = require("sdk/ui/button/toggle");
 var panels = require("sdk/panel");
 
-var inXML = false;
+var inXML = true;
 var isTrackingData = true;
 var isTrackingMouse = true;
 // Returns 
