@@ -67,6 +67,8 @@ function isButton1(element) {
     reVal = true;
 //  } else if(element.onclick != null) {
 //    reVal = true;
+  } else if(element.getAttribute('onclick') != null) {
+    reVal = true;
   }
   return reVal;
 }
