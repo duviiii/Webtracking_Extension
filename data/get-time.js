@@ -8,7 +8,6 @@ function addZero(x,n) {
 function getTime(){
   var d = new Date();
   var mon = addZero(d.getMonth()+1,2);
-  console.log(m);
   var date = addZero(d.getDate(),2);
   var h = addZero(d.getHours(), 2);
   var m = addZero(d.getMinutes(), 2);
