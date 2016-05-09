@@ -56,10 +56,15 @@ function onReloadContent(){
   console.log("reload content eh?")
   // Load all webpage element
   var data = document.getElementsByTagName('*');
-  raw_buttons = getButtons(data);
-  raw_links = getLinks(data);
+  //raw_buttons = getButtons(data);
+  //raw_links = getLinks(data);
+  //raw_images = getImages(data);
+  //raw_texts = getTexts(data);
+  elements = getElementTypes(data);
+  raw_buttons = elements[0];
+  raw_links = elements[1];
+  raw_texts = elements[2];
   raw_images = getImages(data);
-  raw_texts = getTexts(data);
 }
 
 function onUpdateInfo(time, isClickEvent = false, clickInfo = null){
@@ -79,22 +84,22 @@ function onUpdateInfo(time, isClickEvent = false, clickInfo = null){
   var displayed_texts = [];
 
   if (raw_buttons != null && raw_buttons.length > 0){
-    var buttons = removeDuplicate(raw_buttons);
+    //var buttons = removeDuplicate(raw_buttons);
     displayed_buttons = getDisplayedElements(raw_buttons, windowSize);
   } else { var buttons = raw_buttons;}
 
   if (raw_links != null && raw_links.length > 0) {
-    var links = removeDuplicate(raw_links);
+    //var links = removeDuplicate(raw_links);
     displayed_links = getDisplayedElements(raw_links, windowSize);
   } else { var links = raw_links;}
 
   if (raw_images != null && raw_images.length > 0) {
-    var images = removeDuplicate(raw_images);
+    //var images = removeDuplicate(raw_images);
     displayed_images = getDisplayedElements(raw_images, windowSize);
   } else { var images = raw_images;}
 
   if (raw_images != null && raw_texts.length > 0){
-    var texts = removeDuplicate(raw_texts);
+    //var texts = removeDuplicate(raw_texts);
     displayed_texts = getDisplayedElements(raw_texts, windowSize);
   } else { var texts = raw_texts;}
   //var buttons = getButtons(data);
@@ -117,7 +122,10 @@ function onUpdateInfo(time, isClickEvent = false, clickInfo = null){
   var screenData = [];
 
   if(inXML){
-    screenData.push("<recordData\tid=\"" + time + "\"\tdomain=\""+window.location.origin+"\">\n");
+    screenData.push("<recordData\tid=\"" + time +
+                    "\"\tdomain=\""+window.location.origin+"\"" + 
+                    "\tscrollX=\""+windowSize.scrollX+"\""+ 
+                    "\tscrollY=\""+windowSize.scrollY+"\">\n");
 
     if(isClickEvent){
       screenData.push("<event\t" + "time=\""+time + "\"" + "\t" +
@@ -236,6 +244,24 @@ function getWindowSize(){
   currentSize.innerY = currentSize.outerY + currentSize.borderTop;
 
   return currentSize;
+}
+
+function getElementTypes(data){
+  var buttons = [];
+  var links = [];
+  var texts = [];
+
+  var l = data.length;
+  for (var i=0; i<l; i++){
+    if(isButton(data[i])){
+      buttons.push(data[i]);
+    } else if(containLink(data[i])){
+      links.push(data[i]);
+    } else if(isText(data[i])) {
+      texts.push(data[i]);
+    }
+  }
+  return [buttons, links, texts]
 }
 
 function getButtons(data){
